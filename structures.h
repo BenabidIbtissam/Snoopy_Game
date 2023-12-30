@@ -35,10 +35,10 @@ typedef struct {
 } Ball;
 
 typedef struct {
-    Level *plevel; // Niveau actuel du jeu
-    int lives; // Nombre de vies restantes
-    int score; // Score du joueur
-    int time_remaining; // Temps restant
+    Level *plevel; 
+    int lives;
+    int score;
+    int time_remaining; 
     int matrix [ROWS][COLS];
     Snoopy *psnoopy;
     Ball *pball;

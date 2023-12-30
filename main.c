@@ -20,8 +20,8 @@ int choice;
         printf("2. Start a New Game from Level 1\n");
         printf("3. Load a Saved Game\n");
         printf("4. Start a Level Directly via its Password\n");
-        printf("5. Scores\n");
-        printf("6. Quit\n");
+       // printf("5. Scores\n");
+        printf("5. Quit\n");
         printf("Enter your choice (1-6): ");
         scanf("%d", &choice);
 
@@ -33,7 +33,7 @@ int choice;
                 launch_new_game(&game,1);
                 break;
             case 3:
-               // loadSavedGame();
+               // launch_new_game(&game ,3); 
                 break;
             case 4:
                 launch_new_game(&game,2);

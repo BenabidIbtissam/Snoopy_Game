@@ -10,6 +10,9 @@
 const int TIME_LIMIT =  100 ;
 int elapsedTime = 0;
 
+
+//Function to dispmlay the rules
+
 void display_rules()
 {
     printf("Règles du jeu :\n");
@@ -82,12 +85,14 @@ void place_ball(GameData *game)
     game->matrix[game->pball->position.x][game->pball->position.y ] = 'O';
 }
 
+// Function to initialize score and lives 
 void initialize_score_lives(GameData *game)
 {
     game->score = 0;
     game->lives = 3;
 }
 
+// Function to place wall and traps
 void place_walls(GameData *game)
 {
     srand((unsigned int)time(NULL));
@@ -149,11 +154,11 @@ void place_walls(GameData *game)
     }
 }
 
+//Function to initializelevel password 
 void initialize_password(GameData *game){
  game->plevel->idLevel = 1  ;
      strcpy(game->plevel->password, "ibtissam123"); 
 }
-
 
 // Function to initialize the level
 void initialize_level(GameData *game)
@@ -173,8 +178,6 @@ void initialize_level(GameData *game)
     place_walls(game);
     initialize_score_lives(game);
 }
-
-
 
 // Function to display the game matrix with separators and additional information
 void display_game(GameData *game)
@@ -208,6 +211,29 @@ void display_game(GameData *game)
     }
 }
 
+//Function to save the game 
+void save_game(GameData *game) {
+    FILE *file = fopen("saved_game.txt", "w");
+    if (file == NULL) {
+        printf("Error opening file for saving the game.\n");
+        return;
+    }
+
+    // Save game data to the file
+    fprintf(file, "%d\n%d\n", game->score, game->lives);
+
+    // Save matrix elements to the file
+    for (int i = 0; i < ROWS; ++i) {
+        for (int j = 0; j < COLS; ++j) {
+            fprintf(file, "%c", game->matrix[i][j]);
+        }
+        fprintf(file, "\n");
+    }
+
+    fclose(file);
+    printf("Game saved successfully.\n");
+}
+
 // Function to get a character from the terminal without waiting for enter
 char getch()
 {
@@ -231,6 +257,7 @@ char getch()
     return (buf);
 }
 
+// Main function of the level , controls snoopy , the ball's mouvement , time & score
 void move_snoopy(GameData *game)
 {
     int dx = -1 , dy = -1;
@@ -399,6 +426,12 @@ void move_snoopy(GameData *game)
             break;
         }
 
+        else if (input == 'S' || input == 's')
+        {
+            printf("Saving...\n");
+            save_game(game);
+            break;
+        }
         
        if (game->score == 4) {
         printf("Congrats !");
@@ -431,6 +464,33 @@ void move_snoopy(GameData *game)
     }
 }
 
+
+
+//function to load game state
+void load_game_state(GameData *game) {
+    FILE *file = fopen("saved_game.txt", "r");
+    if (file == NULL) {
+        printf("Error opening file for loading the game.\n");
+        return;
+    }
+
+    // Load game data from the file
+    fscanf(file, "%d\n%d\n", &game->score, &game->lives);
+
+    // Load matrix elements from the file
+    for (int i = 0; i < ROWS; ++i) {
+        for (int j = 0; j < COLS; ++j) {
+            char c;
+            fscanf(file, " %c", &c); // Include a space before %c to consume whitespace/newline
+            game->matrix[i][j] = c;
+        }
+    }
+
+    fclose(file);
+    printf("Game loaded successfully.\n");
+}
+
+// Function to launch the game
 void launch_new_game(GameData *game, int num) {
     if (num == 1) {
         initialize_level(game);
@@ -447,6 +507,5 @@ void launch_new_game(GameData *game, int num) {
             } else {
                 printf("Wrong password\n");
             }
-        }
-    
+    }
 }
